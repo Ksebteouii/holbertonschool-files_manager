@@ -5,7 +5,7 @@ class RedisClient {
   constructor() {
     this.client = createClient();
     
-    // تحويل دوال Redis إلى Promises
+    
     this.getAsync = promisify(this.client.get).bind(this.client);
     this.setAsync = promisify(this.client.setex).bind(this.client);
     this.delAsync = promisify(this.client.del).bind(this.client);
@@ -45,6 +45,6 @@ class RedisClient {
   }
 }
 
-// إنشاء وتصدير الكائن
+
 const redisClient = new RedisClient();
 export default redisClient;
