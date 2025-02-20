@@ -15,9 +15,13 @@ class DBClient {
     // Create a new MongoDB client
     this.client = new MongoClient(this.uri, { useUnifiedTopology: true });
 
+    // Track connection status
+    this.connected = false;
+
     // Connect to MongoDB
     this.client.connect()
       .then(() => {
+        this.connected = true;
         console.log('Connected to MongoDB');
       })
       .catch((err) => {
@@ -27,11 +31,12 @@ class DBClient {
 
   // Check if the connection to MongoDB is alive
   isAlive() {
-    return this.client.isConnected();
+    return this.connected;
   }
 
   // Get the number of documents in the 'users' collection
   async nbUsers() {
+    if (!this.connected) return 0; // Ensure connection is established
     const db = this.client.db(this.dbName);
     const usersCollection = db.collection('users');
     return usersCollection.countDocuments();
@@ -39,6 +44,7 @@ class DBClient {
 
   // Get the number of documents in the 'files' collection
   async nbFiles() {
+    if (!this.connected) return 0; // Ensure connection is established
     const db = this.client.db(this.dbName);
     const filesCollection = db.collection('files');
     return filesCollection.countDocuments();
