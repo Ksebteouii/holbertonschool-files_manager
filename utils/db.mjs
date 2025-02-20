@@ -1,5 +1,6 @@
 // utils/db.mjs
-import { MongoClient } from 'mongodb';
+import mongodb from 'mongodb';
+const { MongoClient } = mongodb;
 
 class DBClient {
   constructor() {
@@ -36,18 +37,30 @@ class DBClient {
 
   // Get the number of documents in the 'users' collection
   async nbUsers() {
-    if (!this.connected) return 0; // Ensure connection is established
-    const db = this.client.db(this.dbName);
-    const usersCollection = db.collection('users');
-    return usersCollection.countDocuments();
+    try {
+      if (!this.connected) return 0; // Ensure connection is established
+      const db = this.client.db(this.dbName);
+      const usersCollection = db.collection('users');
+      const count = await usersCollection.countDocuments();
+      return count;
+    } catch (err) {
+      console.error('Error in nbUsers:', err);
+      return 0;
+    }
   }
 
   // Get the number of documents in the 'files' collection
   async nbFiles() {
-    if (!this.connected) return 0; // Ensure connection is established
-    const db = this.client.db(this.dbName);
-    const filesCollection = db.collection('files');
-    return filesCollection.countDocuments();
+    try {
+      if (!this.connected) return 0; // Ensure connection is established
+      const db = this.client.db(this.dbName);
+      const filesCollection = db.collection('files');
+      const count = await filesCollection.countDocuments();
+      return count;
+    } catch (err) {
+      console.error('Error in nbFiles:', err);
+      return 0;
+    }
   }
 }
 
